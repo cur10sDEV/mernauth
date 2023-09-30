@@ -1,3 +1,4 @@
+import path from "path";
 import { config } from "dotenv";
 import express from "express";
 import cookieParser from "cookie-parser";
@@ -20,12 +21,21 @@ app.use(cookieParser());
 // db
 connectDB();
 
-app.get("/", (req, res) => {
-  res.send("Hello there");
-});
-
 // routes - /api/users
 app.use("/api/users", userRouter);
+
+// production config code
+if (process.env.NODE_ENV === "production") {
+  const __dirname = path.resolve();
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"))
+  );
+} else {
+  app.get("/", (req, res) => {
+    res.send("Hello there");
+  });
+}
 
 // 404 - not found error
 app.use("*", notFound);

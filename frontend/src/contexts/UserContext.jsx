@@ -15,36 +15,36 @@ const userReducer = (state, action) => {
       return {
         ...state,
         userInfo: action.payload,
-        isLoading: false,
       };
     case "login":
       return {
         ...state,
         userInfo: action.payload,
-        isLoading: false,
       };
     case "logout":
       return {
         ...state,
         userInfo: action.payload,
-        isLoading: false,
       };
     case "get":
       return {
         ...state,
         userInfo: action.payload,
-        isLoading: false,
       };
     case "update":
       return {
         ...state,
         userInfo: action.payload,
-        isLoading: false,
       };
-    case "apiCall":
+    case "apiCallStart":
       return {
         ...state,
         isLoading: true,
+      };
+    case "apiCallEnd":
+      return {
+        ...state,
+        isLoading: false,
       };
     default:
       throw new Error("Unknown action type");
@@ -64,7 +64,7 @@ const UserProvider = ({ children }) => {
 
   const registerUser = async (formData) => {
     try {
-      dispatch({ type: "apiCall" });
+      dispatch({ type: "apiCallStart" });
       const res = await fetch("/api/users", {
         method: "POST",
         headers: {
@@ -73,6 +73,7 @@ const UserProvider = ({ children }) => {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
+      dispatch({ type: "apiCallEnd" });
       if (data.status === "success") {
         dispatch({ type: "register", payload: data.data });
         toast.success(data.message);
@@ -87,7 +88,7 @@ const UserProvider = ({ children }) => {
 
   const loginUser = async (formData) => {
     try {
-      dispatch({ type: "apiCall" });
+      dispatch({ type: "apiCallStart" });
       const res = await fetch("/api/users/auth", {
         method: "POST",
         headers: {
@@ -96,6 +97,7 @@ const UserProvider = ({ children }) => {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
+      dispatch({ type: "apiCallEnd" });
       if (data.status === "success") {
         dispatch({ type: "login", payload: data.data });
         toast.success(data.message);
@@ -110,9 +112,10 @@ const UserProvider = ({ children }) => {
 
   const getUser = async () => {
     try {
-      dispatch({ type: "apiCall" });
+      dispatch({ type: "apiCallStart" });
       const res = await fetch("/api/users/profile");
       const data = await res.json();
+      dispatch({ type: "apiCallEnd" });
       if (data.status === "success") {
         dispatch({ type: "get", payload: data.data });
         toast.success(data.message);
@@ -126,7 +129,7 @@ const UserProvider = ({ children }) => {
 
   const updateUser = async (formData) => {
     try {
-      dispatch({ type: "apiCall" });
+      dispatch({ type: "apiCallStart" });
       const res = await fetch("/api/users/profile", {
         method: "PUT",
         headers: {
@@ -135,6 +138,7 @@ const UserProvider = ({ children }) => {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
+      dispatch({ type: "apiCallEnd" });
       if (data.status === "success") {
         dispatch({ type: "update", payload: data.data });
         toast.success(data.message);
@@ -148,6 +152,7 @@ const UserProvider = ({ children }) => {
 
   const logoutUser = async () => {
     try {
+      dispatch({ type: "apiCallStart" });
       const res = await fetch("/api/users/logout", {
         method: "POST",
         headers: {
@@ -155,6 +160,7 @@ const UserProvider = ({ children }) => {
         },
       });
       const data = await res.json();
+      dispatch({ type: "apiCallEnd" });
       if (data.status === "success") {
         dispatch({ type: "logout", payload: data.data });
         toast.success(data.message);
