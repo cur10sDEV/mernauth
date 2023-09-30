@@ -1,0 +1,1 @@
+import{j as r}from"./index-4bf03aac.js";const e=()=>r.jsxs("div",{children:[r.jsx("h1",{children:"404 Not Found"}),r.jsx("p",{children:"Sorry the resource could not be found!"})]});export{e as default};
